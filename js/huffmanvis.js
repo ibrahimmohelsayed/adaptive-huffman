@@ -116,31 +116,31 @@ function update(source) {
         .text(function (d) {
             return (!d.symbol && !d.left) ? 'NYT' : d.symbol;
         })
-        .filter(function(d) {
+        .filter(function (d) {
             return d.prevSymbol !== d.symbol;
         });
 
-    if(changedSymbols[0].length){
+    if (changedSymbols[0].length) {
         changedSymbols.transition()
             .duration(duration * 2)
-            .styleTween("stroke", function() {
+            .styleTween("stroke", function () {
                 return d3.interpolate("orange", "black");
             })
-            .styleTween("stroke-width", function() {
+            .styleTween("stroke-width", function () {
                 return d3.interpolate(7, 1);
             });
     }
 
     node.select('.weight')
-        .filter(function(d) {
+        .filter(function (d) {
             return d.prevWeight !== d.weight;
         })
         .transition()
         .duration(duration * 2)
-        .styleTween("stroke-width", function() {
+        .styleTween("stroke-width", function () {
             return d3.interpolate(5, 1);
         })
-        .styleTween("stroke", function() {
+        .styleTween("stroke", function () {
             return d3.interpolate("green", "blue");
         })
         .text(function (d) {

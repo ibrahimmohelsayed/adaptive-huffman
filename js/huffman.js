@@ -5,7 +5,7 @@
  * @returns {{encode: Function, getRoot: Function}}
  * @constructor
  */
-var AdaptiveHuffman = function (alphabetSize) {
+function AdaptiveHuffman(alphabetSize) {
     'use strict';
 
     var addNode,
@@ -91,7 +91,7 @@ var AdaptiveHuffman = function (alphabetSize) {
     };
 
     Node.prototype.fixWeights = function () {
-        if(this.left && this.right) {
+        if (this.left && this.right) {
             this.left.fixWeights();
             this.right.fixWeights();
             this.weight = this.left.weight + this.right.weight;
@@ -102,10 +102,10 @@ var AdaptiveHuffman = function (alphabetSize) {
         this.left = left;
         this.right = right;
         this.children = [];
-        if(left) {
+        if (left) {
             this.children.push(left);
         }
-        if(right) {
+        if (right) {
             this.children.push(right);
         }
     };
@@ -116,8 +116,6 @@ var AdaptiveHuffman = function (alphabetSize) {
     root = new Node(null, null, maxSize);
     nodes = [root];
     NYTNode = root;
-
-
 
     /**
      * Encodes single character.
@@ -191,11 +189,11 @@ var AdaptiveHuffman = function (alphabetSize) {
      * @returns {Node} Node for a given symbol
      */
     findSymbolNode = function (symbol) {
-      for(var i = 0, l = nodes.length; i < l; i++) {
-          if(nodes[i].symbol === symbol) {
-              return nodes[i];
-          }
-      }
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            if (nodes[i].symbol === symbol) {
+                return nodes[i];
+            }
+        }
     };
 
     /**
@@ -205,20 +203,6 @@ var AdaptiveHuffman = function (alphabetSize) {
      * @param {Node} secondNode Instance of second node.
      */
     swapNodes = function (firstNode, secondNode) {
-
-        // swap children parent pointers
-        if (firstNode.left) {
-            firstNode.left.parent = secondNode;
-        }
-        if (firstNode.right) {
-            firstNode.right.parent = secondNode;
-        }
-        if (secondNode.left) {
-            secondNode.left.parent = firstNode;
-        }
-        if (secondNode.right) {
-            secondNode.right.parent = firstNode;
-        }
 
         // swap the rest of properties
         ['left', 'right', 'parent', 'symbol', 'weight'].forEach(function (property) {
@@ -312,7 +296,7 @@ var AdaptiveHuffman = function (alphabetSize) {
 
         /**
          * Returns the root node of the tree.
-         * @returns {AdaptiveHuffman.Node} Root node.
+         * @returns {Node} Root node.
          */
         getRoot: function () {
             return root;
@@ -327,4 +311,4 @@ var AdaptiveHuffman = function (alphabetSize) {
             return (compInput / compOutput).toFixed(2);
         }
     };
-};
+}
