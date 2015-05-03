@@ -2,13 +2,14 @@
  * Adaptive Huffman encoder class.
  *
  * @param {number} alphabetSize Alphabet size for adaptive Huffman encoder.
- * @returns {{encode: Function, getRoot: Function}}
+ * @returns {{encode: Function, getRoot: Function, getCompressionRatio: Function}}
  * @constructor
  */
 function AdaptiveHuffman(alphabetSize) {
     'use strict';
 
     var addNode,
+        arrSlice = Array.prototype.slice,
         compInput = 0,
         compOutput = 0,
         encodeCharacter,
@@ -29,7 +30,7 @@ function AdaptiveHuffman(alphabetSize) {
     /**
      * Helper functions.
      *
-     * @type {{swapProperty: Function}}
+     * @type {{swapProperty: Function}, {sendMessage: Function}}
      */
     Helpers = {
         swapProperty: function (objA, objB, property) {
@@ -57,14 +58,14 @@ function AdaptiveHuffman(alphabetSize) {
      * Simple logger.
      */
     log = function () {
-        Helpers.sendMessage('log', Array.prototype.slice.call(arguments).join(' '));
+        Helpers.sendMessage('log', arrSlice.call(arguments).join(' '));
     };
 
     /**
      * Simple encoder.
      */
     encoder = function () {
-        Helpers.sendMessage('encode', Array.prototype.slice.call(arguments).join(''));
+        Helpers.sendMessage('encode', arrSlice.call(arguments).join(''));
     };
 
     /**
@@ -204,7 +205,7 @@ function AdaptiveHuffman(alphabetSize) {
      */
     swapNodes = function (firstNode, secondNode) {
 
-        // swap the rest of properties
+        // swap properties
         ['left', 'right', 'parent', 'symbol', 'weight'].forEach(function (property) {
             Helpers.swapProperty(firstNode, secondNode, property);
         });

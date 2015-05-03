@@ -1,3 +1,4 @@
+/*global d3, HuffmanInstance*/
 /**
  * Initializes visualisation for Huffman encoder.
  */
