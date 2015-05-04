@@ -37,158 +37,182 @@ var m = [20, 120, 20, 120],
         .size([h, w]),
     diagonal = d3.svg.diagonal()
         .projection(function (d) {
-            'use strict';
-
             return [d.y, d.x];
         }),
     svg = d3.select('#svg-container').append('svg:svg')
         .attr('width', w + m[1] + m[3])
         .attr('height', h + m[0] + m[2])
         .append('svg:g')
-        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+        .attr('transform', 'translate(' + m[3] + '','' + m[0] + ')');
+
+function getNodeText(node) {
+    return (!node.symbol && !node.left) ? 'NYT' : node.symbol;
+}
 
 function update(source) {
-    'use strict';
 
     var duration = 800,
         tmp = parseInt(window.animDurationEl.value, 10);
 
-    if (!isNaN(tmp)) { // defined in huffman.htm
+    if (!isNaN(tmp)) {
         duration = tmp;
     }
 
-    var nodes = tree.nodes(root).reverse();
+    var treeNodes = tree.nodes(root).reverse();
 
-    var node = svg.selectAll('g.node')
-        .data(nodes, function (d) {
+    var nodes = svg.selectAll('g.node')
+        .data(treeNodes, function (d) {
             return d.id;
         });
 
-    var nodeEnter = node.enter().append('svg:g')
+    var nodeEnter = nodes
+        .enter()
+        .append('svg:g')
         .attr('class', 'node')
         .attr('transform', function () {
-            return 'translate(' + source.y0 + ',' + source.x0 + ')';
+            var x = source.x0 || 0,
+                y = source.y0 || 0;
+
+            return 'translate(' + x + ',' + y + ')';
         });
 
-    nodeEnter.append('svg:circle')
+    nodeEnter
+        .append('svg:circle')
         .attr('r', 2)
         .style('fill', function (d) {
             return (d.symbol) ? 'blue' : '#fff';
         });
 
-    nodeEnter.append('svg:text')
+    nodeEnter
+        .append('svg:text')
         .attr('x', -8)
         .attr('y', -8)
+        .attr('class', 'weight')
         .text(function (d) {
             return d.weight;
-        })
-        .attr('class', 'weight');
-
-    nodeEnter.append('svg:text')
-        .attr('x', 6)
-        .attr('y', 5)
-        .text(function (d) {
-            return (!d.symbol && !d.left) ? 'NYT' : d.symbol;
-        })
-        .attr('class', 'symbol');
-
-    nodeEnter.append('svg:text')
-        .attr('x', -8)
-        .attr('y', 20)
-        .text(function (d) {
-            return d.id;
-        })
-        .attr('class', 'id');
-
-
-    var nodeUpdate = node.transition()
-        .duration(duration)
-        .attr('transform', function (d) {
-            return 'translate(' + d.y0 + ',' + d.x0 + ')';
         });
 
-    nodeUpdate.select('circle')
+    nodeEnter
+        .append('svg:text')
+        .attr('x', 6)
+        .attr('y', 5)
+        .attr('class', 'symbol')
+        .text(getNodeText);
+
+    nodeEnter
+        .append('svg:text')
+        .attr('x', -8)
+        .attr('y', 20)
+        .attr('class', 'id')
+        .text(function (d) {
+            return d.id;
+        });
+
+    var nodeUpdate = nodes
+        .transition()
+        .duration(duration)
+        .attr('transform', function (d) {
+            var x = d.x0 || 0,
+                y = d.y0 || 0;
+
+            return 'translate(' + y + ',' + x + ')';
+        });
+
+    nodeUpdate
+        .select('circle')
         .attr('r', 4.5)
         .style('fill', function (d) {
             return d.symbol ? '#777' : '#fff';
         });
 
-    var changedSymbols = node.select('.symbol')
-        .text(function (d) {
-            return (!d.symbol && !d.left) ? 'NYT' : d.symbol;
-        })
+    nodes
+        .select('.symbol')
+        .text(getNodeText)
         .filter(function (d) {
             return d.prevSymbol !== d.symbol;
+        })
+        .transition()
+        .delay(duration)
+        .duration(duration)
+        .styleTween('stroke', function () {
+            return d3.interpolate('orange', 'black');
+        })
+        .styleTween('stroke-width', function () {
+            return d3.interpolate(7, 1);
         });
 
-    if (changedSymbols[0].length) {
-        changedSymbols.transition()
-            .duration(duration * 2)
-            .styleTween("stroke", function () {
-                return d3.interpolate("orange", "black");
-            })
-            .styleTween("stroke-width", function () {
-                return d3.interpolate(7, 1);
-            });
-    }
-
-    node.select('.weight')
+    nodes
+        .select('.weight')
         .filter(function (d) {
             return d.prevWeight !== d.weight;
         })
         .transition()
         .duration(duration * 2)
-        .styleTween("stroke-width", function () {
+        .styleTween('stroke-width', function () {
             return d3.interpolate(5, 1);
         })
-        .styleTween("stroke", function () {
-            return d3.interpolate("green", "blue");
+        .styleTween('stroke', function () {
+            return d3.interpolate('green', 'blue');
         })
         .text(function (d) {
             return d.weight;
         });
 
-    var nodeExit = node.exit().transition()
+    var nodeExit = nodes
+        .exit()
+        .transition()
         .duration(duration)
         .attr('transform', function () {
             return 'translate(' + source.y + ',' + source.x + ')';
         })
         .remove();
 
-    nodeExit.select('circle')
+    nodeExit
+        .select('circle')
         .attr('r', 1e-6);
 
-    nodeExit.select('text')
+    nodeExit
+        .select('text')
         .style('fill-opacity', 1e-6);
 
-    var link = svg.selectAll('path.link')
-        .data(tree.links(nodes), function (d) {
+    var link = svg
+        .selectAll('path.link')
+        .data(tree.links(treeNodes), function (d) {
             return d.target.id;
         });
 
-    link.enter().insert('svg:path', 'g')
+    link.enter()
+        .insert('svg:path', 'g')
         .attr('class', 'link')
         .attr('d', function (d) {
-            var o = {x: source.x0, y: source.y0};
+            var o = {
+                x: source.x0,
+                y: source.y0
+            };
             return diagonal({source: o, target: o});
         })
         .transition()
         .duration(duration)
         .attr('d', diagonal);
 
-    link.transition()
+    link
+        .transition()
         .duration(duration)
         .attr('d', diagonal);
 
-    link.exit().transition()
+    link.exit()
+        .transition()
         .duration(duration)
         .attr('d', function (d) {
-            var o = {x: source.x, y: source.y};
+            var o = {
+                x: source.x,
+                y: source.y
+            };
             return diagonal({source: o, target: o});
         })
         .remove();
 
-    nodes.forEach(function (d) {
+    treeNodes.forEach(function (d) {
         d.x0 = d.x;
         d.y0 = d.y;
         d.prevWeight = d.weight;
