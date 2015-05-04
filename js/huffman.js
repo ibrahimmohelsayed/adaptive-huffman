@@ -86,11 +86,17 @@ function AdaptiveHuffman(alphabetSize) {
         log('New node created ( id:', this.id, 'symbol:', this.symbol, ')');
     }
 
+    /**
+     * Increases weight of the node.
+     */
     Node.prototype.increaseWeight = function () {
         this.weight++;
-        log('Increasing weight for node', this.id);
+        log('Increasing weight of node', this.id);
     };
 
+    /**
+     * Fixes weights of the subtree.
+     */
     Node.prototype.fixWeights = function () {
         if (this.left && this.right) {
             this.left.fixWeights();
@@ -99,6 +105,11 @@ function AdaptiveHuffman(alphabetSize) {
         }
     };
 
+    /**
+     * Sets children of the node.
+     * @param {Node} [left] left child
+     * @param {Node} [right] right child
+     */
     Node.prototype.setChildren = function (left, right) {
         this.left = left;
         this.right = right;
@@ -137,7 +148,7 @@ function AdaptiveHuffman(alphabetSize) {
             isFirstSeen = true;
             addNode(symbol);
 
-            // for the first character empty character is returned
+            // for the first symbol empty character is returned
             if (Object.keys(symbols).length > 1) {
                 tmp = getHuffmanCode(NYTNode);
                 compOutput += tmp.length;
