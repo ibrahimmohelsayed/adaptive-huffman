@@ -1,39 +1,43 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Adaptive Huffman encoder</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-    <div class="form-inline">
-        <div class="form-group">
-            <label class="control-label">Alphabet size</label>
-            <input id="alphabet-size" value="26" class="form-control">
-            <button id="init-button" class="btn">Create new tree</button>
+    <div class="row">
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="control-label">Alphabet size</label>
+                <input id="alphabet-size" value="26" class="form-control">
+                <button id="init-button" class="btn">Create new tree</button>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Text</label>
+                <input id="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Animation duration (ms)</label>
+                <input id="anim-duration" value="800" class="form-control">
+            </div>
         </div>
         <div class="form-group">
-            <label class="control-label">Text</label>
-            <input id="text" class="form-control">
+            <label class="control-label">Output</label>
+            <pre class="out"></pre>
+            <label class="control-label">Approximate compression ratio</label>
+            <pre class="compression"></pre>
         </div>
         <div class="form-group">
-            <label class="control-label">Animation duration (ms)</label>
-            <input id="anim-duration" value="800" class="form-control">
+            <pre class="logs"></pre>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label">Output</label>
-        <pre class="out"></pre>
-        <label class="control-label">Approximate compression ratio</label>
-        <pre class="compression"></pre>
-    </div>
-    <div class="form-group">
-        <pre class="logs"></pre>
+    <div class="row">
+        <div id="svg-container"></div>
     </div>
 </div>
-
-<div id="svg-container"></div>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="js/huffman.js" charset="utf-8"></script>
 <script src="js/huffmanvis.js" charset="utf-8"></script>
