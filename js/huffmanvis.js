@@ -1,4 +1,5 @@
 /*global d3, HuffmanInstance*/
+var EPSILON = 1e-6;
 /**
  * Initializes visualisation for Huffman encoder.
  */
@@ -43,7 +44,7 @@ var m = [20, 120, 20, 120],
         .attr('width', w + m[1] + m[3])
         .attr('height', h + m[0] + m[2])
         .append('svg:g')
-        .attr('transform', 'translate(' + m[3] + '','' + m[0] + ')');
+        .attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
 
 function getNodeText(node) {
     return (!node.symbol && !node.left) ? 'NYT' : node.symbol;
@@ -60,7 +61,8 @@ function update(source) {
 
     var treeNodes = tree.nodes(root).reverse();
 
-    var nodes = svg.selectAll('g.node')
+    var nodes = svg
+        .selectAll('g.node')
         .data(treeNodes, function (d) {
             return d.id;
         });
@@ -70,10 +72,7 @@ function update(source) {
         .append('svg:g')
         .attr('class', 'node')
         .attr('transform', function () {
-            var x = source.x0 || 0,
-                y = source.y0 || 0;
-
-            return 'translate(' + x + ',' + y + ')';
+            return 'translate(' + source.y + ',' + source.x + ')';
         });
 
     nodeEnter
@@ -112,10 +111,7 @@ function update(source) {
         .transition()
         .duration(duration)
         .attr('transform', function (d) {
-            var x = d.x0 || 0,
-                y = d.y0 || 0;
-
-            return 'translate(' + y + ',' + x + ')';
+            return 'translate(' + d.y + ',' + d.x + ')';
         });
 
     nodeUpdate
@@ -169,38 +165,36 @@ function update(source) {
 
     nodeExit
         .select('circle')
-        .attr('r', 1e-6);
+        .attr('r', EPSILON);
 
     nodeExit
         .select('text')
-        .style('fill-opacity', 1e-6);
+        .style('fill-opacity', EPSILON);
 
-    var link = svg
+
+    var links = svg
         .selectAll('path.link')
         .data(tree.links(treeNodes), function (d) {
             return d.target.id;
         });
 
-    link.enter()
+    links.enter()
         .insert('svg:path', 'g')
         .attr('class', 'link')
-        .attr('d', function (d) {
+        .attr('d', function () {
             var o = {
-                x: source.x0,
-                y: source.y0
+                x: source.x,
+                y: source.y
             };
             return diagonal({source: o, target: o});
-        })
+        });
+
+    links
         .transition()
         .duration(duration)
         .attr('d', diagonal);
 
-    link
-        .transition()
-        .duration(duration)
-        .attr('d', diagonal);
-
-    link.exit()
+    links.exit()
         .transition()
         .duration(duration)
         .attr('d', function (d) {
@@ -213,8 +207,6 @@ function update(source) {
         .remove();
 
     treeNodes.forEach(function (d) {
-        d.x0 = d.x;
-        d.y0 = d.y;
         d.prevWeight = d.weight;
         d.prevSymbol = d.symbol;
     });
