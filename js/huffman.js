@@ -192,6 +192,8 @@ function AdaptiveHuffman(alphabetSize) {
                 node.increaseWeight();
             }
         }
+
+        root.fixWeights();
     };
 
     /**
