@@ -9,34 +9,53 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="form-inline">
-            <div class="form-group">
-                <label class="control-label">Alphabet size</label>
-                <input id="alphabet-size" value="26" class="form-control">
-                <button id="init-button" class="btn">Create new tree</button>
+        <div class="col-md-7">
+            <div class="form-horizontal huff-form huff-settings">
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-sm-5">Alphabet size</label>
+
+                    <div class="col-sm-7">
+                        <div class="col-sm-4">
+                            <input id="alphabet-size" value="26" class="form-control">
+                        </div>
+                        <div class="col-sm-8">
+                            <button id="init-button" class="btn btn-default">Create a new tree</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="control-label col-sm-5">Animation duration (ms)</label>
+
+                    <div class="col-sm-7">
+                        <input id="anim-duration" value="800" class="form-control">
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="control-label">Text</label>
-                <input id="text" class="form-control">
-            </div>
-            <div class="form-group">
-                <label class="control-label">Animation duration (ms)</label>
-                <input id="anim-duration" value="800" class="form-control">
+            <div class="form-horizontal huff-form huff-encoder">
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Text</label>
+
+                    <div class="col-sm-9">
+                        <input id="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Output</label>
+                    <pre class="out col-sm-9"></pre>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Approximate compression ratio</label>
+                    <pre class="compression col-sm-9"></pre>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label">Output</label>
-            <pre class="out"></pre>
-            <label class="control-label">Approximate compression ratio</label>
-            <pre class="compression"></pre>
-        </div>
-        <div class="form-group">
-            <pre class="logs"></pre>
+        <div class="col-md-5">
+            <div class="form-group">
+                <pre class="logs"></pre>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div id="svg-container"></div>
-    </div>
+    <div id="svg-container" class="row"></div>
 </div>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="js/huffman.js" charset="utf-8"></script>
@@ -50,7 +69,7 @@
             alphabetSizeEl = document.getElementById('alphabet-size'),
             textEl = document.getElementById('text'),
             inputButtonEl = document.getElementById('init-button'),
-            alphabetSize =  parseInt(alphabetSizeEl.value.trim(), 10),
+            alphabetSize = parseInt(alphabetSizeEl.value.trim(), 10),
             HuffmanInstance = new AdaptiveHuffman(alphabetSize);
 
     /**
@@ -91,7 +110,7 @@
             compressContainer.textContent = '';
             textEl.value = '';
             HuffmanInstance = new AdaptiveHuffman(alphabetSize);
-            initVis(); // from huffmanvis.js
+            updateTree(); // from huffmanvis.js
         }
     }
 

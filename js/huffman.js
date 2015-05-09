@@ -83,7 +83,7 @@ function AdaptiveHuffman(alphabetSize) {
         this.symbol = symbol;
         this.weight = 0;
         this.id = id;
-        log('New node created ( id:', this.id, 'symbol:', this.symbol, ')');
+        log('New node created ( id:', this.id, (this.symbol) ? ('symbol: ' + this.symbol) : '', ')');
     }
 
     /**

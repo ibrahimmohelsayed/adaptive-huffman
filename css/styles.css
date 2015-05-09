@@ -1,46 +1,37 @@
-.container {
-    margin: 20px;
-}
-
-.container > div {
-    float: left;
-}
-
-.container .form-inline {
-    width: 380px;
-}
-
-.container pre {
-    word-break: normal !important;
-    word-wrap: normal !important;
-    white-space: pre !important;
-    overflow: auto;
-}
-
-.container .out {
-    max-width: 430px;
-}
-
-.container .compression {
-    width: 100px;
-    text-align: center;
-}
-
-.container .logs {
-    top: 5px;
-    right: 5px;
-    height: auto;
-    max-height: 170px;
-    background-color: #eeeeee;
-    position: fixed;
-    width: 500px;
-}
 #alphabet-size {
-    width: 80px !important;
+    width: 100%;
 }
 
-#anim-duration {
-    width: 75px;
+.out {
+    max-height: 15vh;
+}
+
+.logs {
+    max-height: 30vh;
+}
+
+.huff-form {
+    position: relative;
+    padding: 2em 1em 1em;
+    margin: 0 -1em 1em;
+}
+
+.huff-form:after {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.huff-settings:after {
+    content: "Settings";
+}
+
+.huff-encoder:after {
+    content: "Encoder";
 }
 
 /* svg styles */
@@ -51,19 +42,22 @@
 
 #svg-container .id {
     stroke: red;
+    baseline-shift: -1.4em;
 }
 
 #svg-container .weight {
-    font-size: 14px;
     stroke: blue;
+    baseline-shift: super;
 }
 
 #svg-container .symbol {
     stroke: #000;
+    text-anchor: initial;
 }
 
 #svg-container text {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
+    text-anchor: middle;
 }
 
 #svg-container .link {

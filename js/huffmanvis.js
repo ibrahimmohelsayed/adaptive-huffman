@@ -1,39 +1,8 @@
 /*global d3, HuffmanInstance*/
-var EPSILON = 1e-6;
-/**
- * Initializes visualisation for Huffman encoder.
- */
-function initVis() {
-    'use strict';
-
-    // unbind previous listener
-    document.removeEventListener('update', updateTree, false);
-
-    // get the root of the encoding tree
-    root = HuffmanInstance.getRoot();
-    root.parent = root;
-    root.px = root.x;
-    root.py = root.y;
-
-    updateTree();
-    document.addEventListener('update', updateTree, false);
-
-}
-
-/**
- * Updates tree visualisation from the root node.
- */
-function updateTree() {
-    'use strict';
-
-    update(root);
-}
 
 var m = [20, 120, 20, 120],
     w = 1280 - m[1] - m[3],
     h = 800 - m[0] - m[2],
-    i = 0,
-    root,
     tree = d3.layout.tree()
         .size([h, w]),
     diagonal = d3.svg.diagonal()
@@ -44,7 +13,19 @@ var m = [20, 120, 20, 120],
         .attr('width', w + m[1] + m[3])
         .attr('height', h + m[0] + m[2])
         .append('svg:g')
-        .attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
+        .attr('transform', 'translate(' + m[3] + ',' + m[0] + ')'),
+    EPSILON = 1e-6;
+
+document.addEventListener('update', updateTree, false);
+
+/**
+ * Updates tree visualisation from the root node.
+ */
+function updateTree() {
+    'use strict';
+
+    update(HuffmanInstance.getRoot());
+}
 
 function getNodeText(node) {
     return (!node.symbol && !node.left) ? 'NYT' : node.symbol;
@@ -59,7 +40,8 @@ function update(source) {
         duration = tmp;
     }
 
-    var treeNodes = tree.nodes(root).reverse();
+    var treeNodes = tree
+        .nodes(source);
 
     var nodes = svg
         .selectAll('g.node')
@@ -72,7 +54,10 @@ function update(source) {
         .append('svg:g')
         .attr('class', 'node')
         .attr('transform', function () {
-            return 'translate(' + source.y + ',' + source.x + ')';
+            var y = source.y0 || source.y,
+                x = source.x0 || source.x;
+
+            return 'translate(' + y + ',' + x + ')';
         });
 
     nodeEnter
@@ -84,8 +69,6 @@ function update(source) {
 
     nodeEnter
         .append('svg:text')
-        .attr('x', -8)
-        .attr('y', -8)
         .attr('class', 'weight')
         .text(function (d) {
             return d.weight;
@@ -100,8 +83,6 @@ function update(source) {
 
     nodeEnter
         .append('svg:text')
-        .attr('x', -8)
-        .attr('y', 20)
         .attr('class', 'id')
         .text(function (d) {
             return d.id;
@@ -183,8 +164,8 @@ function update(source) {
         .attr('class', 'link')
         .attr('d', function () {
             var o = {
-                x: source.x,
-                y: source.y
+                x: source.x0 || source.x,
+                y: source.y0 || source.y
             };
             return diagonal({source: o, target: o});
         });
@@ -210,4 +191,8 @@ function update(source) {
         d.prevWeight = d.weight;
         d.prevSymbol = d.symbol;
     });
+
+    // store previous root coordinates for proper animation
+    source.x0 = source.x;
+    source.y0 = source.y;
 }
