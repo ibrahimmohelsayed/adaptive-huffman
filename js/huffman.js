@@ -303,7 +303,9 @@ function AdaptiveHuffman(alphabetSize) {
          * @returns {string} Encoded value.
          */
         encode: function (char) {
-            return encodeCharacter(char);
+            var encodedValue = encodeCharacter(char);
+            Helpers.sendMessage('update');
+            return encodedValue;
         },
 
         /**

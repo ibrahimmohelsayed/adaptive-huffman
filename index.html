@@ -42,13 +42,16 @@
 <script src="js/huffman.js" charset="utf-8"></script>
 <script src="js/huffmanvis.js" charset="utf-8"></script>
 <script type="text/javascript">
-    var alphabetSize = 26,
-            HuffmanInstance = new AdaptiveHuffman(alphabetSize),
-            previousText = '',
+    var previousText = '',
             logContainer = document.querySelector('.logs'),
             outContainer = document.querySelector('.out'),
             compressContainer = document.querySelector('.compression'),
-            animDurationEl = document.querySelector('#anim-duration');
+            animDurationEl = document.getElementById('anim-duration'),
+            alphabetSizeEl = document.getElementById('alphabet-size'),
+            textEl = document.getElementById('text'),
+            inputButtonEl = document.getElementById('init-button'),
+            alphabetSize =  parseInt(alphabetSizeEl.value.trim(), 10),
+            HuffmanInstance = new AdaptiveHuffman(alphabetSize);
 
     /**
      * Handles 'log' events.
@@ -58,7 +61,7 @@
         'use strict';
 
         console.log('['.concat(e.detail.time.toLocaleString(), '] [LOG] ', e.detail.message));
-        logContainer.innerHTML += e.detail.message.concat('\n');
+        logContainer.textContent += e.detail.message.concat('\n');
     }
 
     /**
@@ -69,8 +72,8 @@
         'use strict';
 
         console.log('['.concat(e.detail.time.toLocaleString(), '] [ENCODER] ', e.detail.message));
-        outContainer.innerHTML += e.detail.message;
-        compressContainer.innerHTML = HuffmanInstance.getCompressionRatio();
+        outContainer.textContent += e.detail.message;
+        compressContainer.textContent = HuffmanInstance.getCompressionRatio();
     }
 
     /**
@@ -79,14 +82,14 @@
     function buttonHandler() {
         'use strict';
 
-        var size = parseInt(document.querySelector('#alphabet-size').value.trim(), 10);
+        var size = parseInt(alphabetSizeEl.value.trim(), 10);
 
         if (!isNaN(size)) {
             alphabetSize = size;
-            logContainer.innerHTML = '';
-            outContainer.innerHTML = '';
-            compressContainer.innerHTML = '';
-            document.querySelector('#text').value = '';
+            logContainer.textContent = '';
+            outContainer.textContent = '';
+            compressContainer.textContent = '';
+            textEl.value = '';
             HuffmanInstance = new AdaptiveHuffman(alphabetSize);
             initVis(); // from huffmanvis.js
         }
@@ -98,7 +101,7 @@
     function textHandler() {
         'use strict';
 
-        var text = document.querySelector('#text').value.trim(),
+        var text = textEl.value.trim(),
                 diff;
 
         if ((previousText = '') || (text.indexOf(previousText) === 0)) {
@@ -131,8 +134,8 @@
         // bind listeners
         document.addEventListener('log', logHandler, false);
         document.addEventListener('encode', encodeHandler, false);
-        document.querySelector('#init-button').onclick = buttonHandler;
-        document.querySelector('#text').addEventListener('input', textHandler, false);
+        inputButtonEl.onclick = buttonHandler;
+        textEl.addEventListener('input', textHandler, false);
         logContainer.addEventListener('click', toggleOpacity, false);
         buttonHandler();
     };

@@ -7,7 +7,7 @@ function initVis() {
     'use strict';
 
     // unbind previous listener
-    document.removeEventListener('log', updateTree, false);
+    document.removeEventListener('update', updateTree, false);
 
     // get the root of the encoding tree
     root = HuffmanInstance.getRoot();
@@ -16,7 +16,7 @@ function initVis() {
     root.py = root.y;
 
     updateTree();
-    document.addEventListener('log', updateTree, false);
+    document.addEventListener('update', updateTree, false);
 
 }
 
